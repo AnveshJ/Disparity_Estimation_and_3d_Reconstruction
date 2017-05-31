@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import Tkinter
 import pprint
 
+from tqdm import tqdm
 from matplotlib.pyplot import imshow
 from Tkinter import Tk
 from os import listdir
@@ -25,16 +26,19 @@ def disp_depth(root, subj, task):
 	images1 = []
 	images2 = []
 	disparity = []
+	random_images = range(100)
+	random_image = range(10)
 	#Taking_Input_of_Images_from_first_camera_in_Arrays
 	mypath=root+subj+'/'+subj+task+'/'+subj+task+'_images'+'/'+'task1/'
-	imlist = np.array(fnmatch.filter(os.listdir(mypath), '*.bmp'))
-	for im in imlist:
-		#if im.find('cam1') >0:
-		im_left = cv2.imread(mypath+im, flags=0)
-		im_right = cv2.imread(mypath+im.replace("cam1","cam2"),flags=0)
-		images1.append(im_left)
-		images2.append(im_right)
-
+	print(mypath)
+	for n in range(2000,2099):
+		for i in range(0,9):
+			filename1 = mypath + 'cam1_frame_'+str(n)+str(i)+'.bmp'
+			filename2 = mypath + 'cam2_frame_'+str(n)+str(i)+'.bmp'
+			if os.path.exists(filename1) and os.path.exists(filename2):
+				images1.append(cv2.imread(filename1))
+				images2.append(cv2.imread(filename2))
+	
 	#Declaring_disparity_parameters.  --- # Values are original values, you can optimize them according to you
 										  # code but start with these.
 	min_disparity = 0 #0
@@ -54,7 +58,7 @@ def disp_depth(root, subj, task):
 
 
 	#Loops for finding disparities in images
-	for n in range(0,len(images1)):
+	for n in range(0,len(images2)):
 		disp_list = []
 		depth_list = []
 		a = []
